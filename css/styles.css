@@ -6,6 +6,7 @@
   --team-color: #f4f4fd;
   --footer-color: #e7e9fc;
   --hover-color: #404bbf;
+  --main-transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 img {
@@ -42,6 +43,7 @@ body {
   color: var(--primary-color);
   font-size: 16px;
   background-color: var(--white-color);
+  padding-top: 73px;
 }
 
 .container {
@@ -98,7 +100,13 @@ body {
 
 /*------------------------------HEADER------------------------------*/
 .header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+
   border-bottom: 1px solid #e7e9fc;
+  background-color: var(--white-color);
+  z-index: 1;
 }
 
 .header-container {
@@ -138,13 +146,17 @@ body {
 }
 
 .header-link {
+  position: relative;
   display: inline-block;
   padding: 24px 0;
+  height: 100%;
 
   font-weight: 500;
   line-height: 1.5;
   letter-spacing: 0.02em;
   color: var(--secondary-color);
+
+  transition: color var(--main-transition);
 }
 
 .header-link:hover,
@@ -152,15 +164,40 @@ body {
 .header-link.current {
   color: var(--hover-color);
 }
+
+.header-link::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  content: '';
+  width: 100%;
+  height: 4px;
+  background-color: var(--hover-color);
+  border-radius: 2px;
+  transform: scaleX(0);
+
+  transition: transform var(--main-transition);
+}
+
+.header-link:hover::after,
+.header-link:focus::after,
+.header-link.current::after {
+  transform: scaleX(1);
+}
+
 .header-adress-list {
   display: flex;
   gap: 40px;
 }
+
 .header-adress-item {
 }
+
 .header-adress-link {
   line-height: 1.5;
   color: var(--primary-color);
+  transition: color var(--main-transition);
 }
 
 .header-adress-link:hover,
@@ -209,14 +246,17 @@ body {
 
   color: var(--white-color);
   background-color: var(--web-color);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 
   border: none;
   border-radius: 4px;
+
+  transition: background-color var(--main-transition),
+    box-shadow var(--main-transition);
 }
 .hero-btn:hover,
 .hero-btn:focus {
   background-color: var(--hover-color);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 }
 
 /*------------------------------ADVANTAGES-SECTION------------------------------*/
@@ -321,6 +361,7 @@ body {
   justify-content: center;
   align-items: center;
   background-color: var(--web-color);
+  transition: background-color var(--main-transition);
 }
 .team-link-soc:hover,
 .team-link-soc:focus {
@@ -356,6 +397,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: border-color var(--main-transition);
 }
 
 .customers-link:hover,
@@ -365,6 +407,7 @@ body {
 
 .customers-item-icon {
   fill: #8e8f99;
+  transition: fill var(--main-transition);
 }
 
 .customers-link:is(:hover, :focus) .customers-item-icon {
@@ -433,6 +476,8 @@ body {
 
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
+
+  transition: background-color var(--main-transition);
 }
 
 .footer-link-soc:hover,
@@ -480,6 +525,9 @@ body {
 
   background-color: var(--team-color);
   color: var(--web-color);
+
+  transition: background-color var(--main-transition),
+    color var(--main-transition), box-shadow var(--main-transition);
 }
 
 .works-filter-btn:hover,
@@ -503,12 +551,38 @@ body {
 
 .works-card-link {
   display: block;
+  transition: box-shadow var(--main-transition);
 }
 
 .works-card-link:hover,
 .works-card-link:focus {
   box-shadow: 0px 1px 6px rgba(46, 47, 66, 0.08),
     0px 1px 1px rgba(46, 47, 66, 0.16), 0px 2px 1px rgba(46, 47, 66, 0.08);
+}
+
+.works-card-link:is(:hover, :focus) .works-card-cover-text {
+  transform: translateY(0);
+}
+
+.works-card-cover-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.works-card-cover-text {
+  position: absolute;
+  top: 0;
+
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--team-color);
+  background-color: var(--hover-color);
+  height: 101%;
+  padding: 40px 32px;
+
+  transform: translateY(100%);
+  transition: transform var(--main-transition);
+  overflow: auto;
 }
 
 .works-card-wrap {
@@ -523,4 +597,72 @@ body {
 }
 .works-card-text {
   color: var(--primary-color);
+}
+
+/*---------------------------------------------------------------*/
+/*------------------------------MODAL-----------------------------*/
+/*---------------------------------------------------------------*/
+
+.backdrop {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+
+  width: 100%;
+  height: 100%;
+  background-color: rgba(46, 47, 66, 0.9);
+  transition: opacity 400ms ease-in-out, visibility 400ms ease-in-out;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 408px;
+  min-height: 576px;
+  background-color: #fcfcfc;
+  border-radius: 4px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 1px 3px rgba(0, 0, 0, 0.12),
+    0px 2px 1px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+
+  transform: translate(-50%, -50%) scaleY(1);
+  transition: transform 400ms ease-in-out 700ms;
+}
+
+.backdrop.is-hidden .modal {
+  transform: translate(-50%, -50%) scaleY(0);
+}
+
+.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.modal-close-button {
+  width: 24px;
+  height: 24px;
+  background: #e7e9fc;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-left: auto;
+  padding: 0;
+
+  transition: background-color var(--main-transition),
+    fill var(--main-transition);
+}
+
+.modal-close-button:is(:hover, :focus) {
+  background-color: var(--hover-color);
+  fill: var(--white-color);
+}
+
+.close-button-icon {
 }
